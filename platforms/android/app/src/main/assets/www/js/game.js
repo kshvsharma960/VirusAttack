@@ -18,7 +18,7 @@ $.init = function() {
 	$.ctxmg = $.cmg.getContext( '2d' );
 	$.ctxfg = $.cfg.getContext( '2d' );
 	$.cw = $.cmg.width = $.cfg.width = window.innerWidth;
-	$.ch = $.cmg.height = $.cfg.height = window.innerHeight;
+	$.ch = $.cmg.height = $.cfg.height = window.innerHeight-25;
 	$.wrap.style.width = $.wrapInner.style.width = $.cw + 'px';
 	$.wrap.style.height = $.wrapInner.style.height = $.ch + 'px';
 	$.wrap.style.marginLeft = ( -$.cw / 2 ) - 10 + 'px';
@@ -426,7 +426,7 @@ $.renderInterface = function() {
 	var healthBar = {
 		x: healthText.ex + 10,
 		y: healthText.sy,
-		width: 110,
+		width: ($.cw*0.065),
 		height: 10
 	};
 	$.ctxmg.fillStyle = 'hsla(0, 0%, 20%, 1)';
@@ -679,7 +679,7 @@ $.spawnEnemies = function() {
 Events
 ==============================================================================*/
 $.mousemovecb = function( e ) {
-	//e.preventDefault();
+	e.preventDefault();
 	$.mouse.ax = e.pageX;
 	$.mouse.ay = e.pageY;
 	$.mousescreen();
@@ -693,12 +693,12 @@ $.mousescreen = function() {
 };
 
 $.mousedowncb = function( e ) {
-	//e.preventDefault();
+	e.preventDefault();
 	$.mouse.down = 1;
 };
 
 $.mouseupcb = function( e ) {
-	//e.preventDefault();
+	e.preventDefault();
 	$.mouse.down = 0;
 };
 
@@ -739,11 +739,8 @@ $.blurcb = function() {
 }
 
 $.bindEvents = function() {
-	window.addEventListener( "touchmove", $.mousemovecb );
+	window.addEventListener( 'mousemove', $.mousemovecb );
 	window.addEventListener( 'mousedown', $.mousedowncb );
-	window.addEventListener( 'touchstart', $.mousedowncb );
-	window.addEventListener( 'touchend', $.mouseupcb );
-	
 	window.addEventListener( 'mouseup', $.mouseupcb );
 	window.addEventListener( 'keydown', $.keydowncb );
 	window.addEventListener( 'keyup', $.keyupcb );
@@ -978,16 +975,14 @@ $.setState = function( state ) {
 			}
 		} );
 		$.buttons.push( statsButton );
-
-		
 	}
 
 	if( state == 'stats' ) {
 		$.mouse.down = 0;
 	
 		var clearButton = new $.Button( {
-			x: $.cw / 2 + 1,
-			y: 426,
+			x: 150,
+			y: $.ch-50,
 			lockedWidth: 299,
 			lockedHeight: 49,
 			scale: 3,
@@ -1003,8 +998,8 @@ $.setState = function( state ) {
 		$.buttons.push( clearButton );
 
 		var menuButton = new $.Button( {
-			x: $.cw / 2 + 1,
-			y: clearButton.ey + 25,
+			x: $.cw -150,
+			y: $.ch-50,
 			lockedWidth: 299,
 			lockedHeight: 49,
 			scale: 3,
@@ -1016,6 +1011,7 @@ $.setState = function( state ) {
 		$.buttons.push( menuButton );	
 	}
 
+	
 	if( state == 'pause' ) {
 		$.mouse.down = 0;
 		$.screenshot = $.ctxmg.getImageData( 0, 0, $.cw, $.ch );
@@ -1056,8 +1052,8 @@ $.setState = function( state ) {
 	
 		$.screenshot = $.ctxmg.getImageData( 0, 0, $.cw, $.ch );
 		var resumeButton = new $.Button( {
-			x: $.cw / 2 + 1,
-			y: 426,
+			x: 150,
+			y: $.ch-50,
 			lockedWidth: 299,
 			lockedHeight: 49,
 			scale: 3,
@@ -1071,8 +1067,8 @@ $.setState = function( state ) {
 		$.buttons.push( resumeButton );
 
 		var menuButton = new $.Button( {
-			x: $.cw / 2 + 1,
-			y: resumeButton.ey + 25,
+			x: $.cw - 150,
+			y: $.ch-50,
 			lockedWidth: 299,
 			lockedHeight: 49,
 			scale: 3,
@@ -1110,7 +1106,7 @@ $.setupStates = function() {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
 			y: $.ch / 2 - 100,
-			text: 'RADIUS RAID',
+			text: 'VIRUS ATTACK',
 			hspacing: 2,
 			vspacing: 1,
 			halign: 'center',
@@ -1129,8 +1125,8 @@ $.setupStates = function() {
 		var bottomInfo = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: $.ch - 172,
-			text: 'CREATED BY JACK RUGILE FOR JS13KGAMES 2013',
+			y: $.ch - 50,
+			text: 'LETS FIGHT THE VIRUS TOGETHER',
 			hspacing: 1,
 			vspacing: 1,
 			halign: 'center',
@@ -1151,7 +1147,7 @@ $.setupStates = function() {
 		var statsTitle = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: 150,
+			y: 50,
 			text: 'STATS',
 			hspacing: 3,
 			vspacing: 1,
@@ -1171,10 +1167,10 @@ $.setupStates = function() {
 		var statKeys = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2 - 10,
-			y: statsTitle.ey + 39,
+			y: statsTitle.ey + 20,
 			text: 'BEST SCORE\nBEST LEVEL\nROUNDS PLAYED\nENEMIES KILLED\nBULLETS FIRED\nPOWERUPS COLLECTED\nTIME ELAPSED',
 			hspacing: 1,
-			vspacing: 17,
+			vspacing: 10,
 			halign: 'right',
 			valign: 'top',
 			scale: 2,
@@ -1188,7 +1184,7 @@ $.setupStates = function() {
 		var statsValues = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2 + 10,
-			y: statsTitle.ey + 39,
+			y: statsTitle.ey + 20,
 			text: 
 				$.util.commas( $.storage['score'] ) + '\n' + 
 				( $.storage['level'] + 1 ) + '\n' + 
@@ -1199,7 +1195,7 @@ $.setupStates = function() {
 				$.util.convertTime( ( $.storage['time'] * ( 1000 / 60 ) ) / 1000 )
 			,
 			hspacing: 1,
-			vspacing: 17,
+			vspacing: 10,
 			halign: 'left',
 			valign: 'top',
 			scale: 2,
@@ -1212,68 +1208,7 @@ $.setupStates = function() {
 		var i = $.buttons.length; while( i-- ){ $.buttons[ i ].render( i ) }
 			i = $.buttons.length; while( i-- ){ $.buttons[ i ].update( i ) }
 	};
-
-	$.states['credits'] = function() {
-		$.clearScreen();
-
-		$.ctxmg.beginPath();
-		var creditsTitle = $.text( {
-			ctx: $.ctxmg,
-			x: $.cw / 2,
-			y: 100,
-			text: 'CREDITS',
-			hspacing: 3,
-			vspacing: 1,
-			halign: 'center',
-			valign: 'bottom',
-			scale: 10,
-			snap: 1,
-			render: 1
-		} );
-		var gradient = $.ctxmg.createLinearGradient( creditsTitle.sx, creditsTitle.sy, creditsTitle.sx, creditsTitle.ey );
-		gradient.addColorStop( 0, '#fff' );
-		gradient.addColorStop( 1, '#999' );
-		$.ctxmg.fillStyle = gradient;
-		$.ctxmg.fill();
-
-		$.ctxmg.beginPath();
-		var creditKeys = $.text( {
-			ctx: $.ctxmg,
-			x: $.cw / 2 - 10,
-			y: creditsTitle.ey + 49,
-			text: 'CREATED FOR JS13KGAMES BY\nINSPIRATION AND SUPPORT\n\nAUDIO PROCESSING\nGAME INSPIRATION AND IDEAS\n\nHTML5 CANVAS REFERENCE\n\nGAME MATH REFERENCE',
-			hspacing: 1,
-			vspacing: 17,
-			halign: 'right',
-			valign: 'top',
-			scale: 2,
-			snap: 1,
-			render: 1
-		} );		
-		$.ctxmg.fillStyle = 'hsla(0, 0%, 100%, 0.5)';
-		$.ctxmg.fill();
-
-		$.ctxmg.beginPath();
-		var creditValues = $.text( {
-			ctx: $.ctxmg,
-			x: $.cw / 2 + 10,
-			y: creditsTitle.ey + 49,
-			text: '@JACKRUGILE\n@REZONER, @LOKTAR00, @END3R,\n@AUSTINHALLOCK, @CHANDLERPRALL\nJSFXR BY @MARKUSNEUBRAND\nASTEROIDS, CELL WARFARE,\nSPACE PIPS, AND MANY MORE\nNIHILOGIC HTML5\nCANVAS CHEAT SHEET\nBILLY LAMBERTA FOUNDATION\nHTML5 ANIMATION WITH JAVASCRIPT',
-			hspacing: 1,
-			vspacing: 17,
-			halign: 'left',
-			valign: 'top',
-			scale: 2,
-			snap: 1,
-			render: 1
-		} );		
-		$.ctxmg.fillStyle = '#fff';
-		$.ctxmg.fill();
-
-		var i = $.buttons.length; while( i-- ){ $.buttons[ i ].render( i ) }
-			i = $.buttons.length; while( i-- ){ $.buttons[ i ].update( i ) }
-	};
-
+	
 	$.states['play'] = function() {
 		$.updateDelta();
 		$.updateScreen();
@@ -1412,7 +1347,7 @@ $.setupStates = function() {
 		var gameoverTitle = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: 150,
+			y: 50,
 			text: 'GAME OVER',
 			hspacing: 3,
 			vspacing: 1,
@@ -1432,7 +1367,7 @@ $.setupStates = function() {
 		var gameoverStatsKeys = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2 - 10,
-			y: gameoverTitle.ey + 51,
+			y: gameoverTitle.ey + 25,
 			text: 'SCORE\nLEVEL\nKILLS\nBULLETS\nPOWERUPS\nTIME',
 			hspacing: 1,
 			vspacing: 17,
@@ -1449,7 +1384,7 @@ $.setupStates = function() {
 		var gameoverStatsValues = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2 + 10,
-			y: gameoverTitle.ey + 51,
+			y: gameoverTitle.ey + 25,
 			text: 
 				$.util.commas( $.score ) + '\n' + 
 				( $.level.current + 1 ) + '\n' + 
