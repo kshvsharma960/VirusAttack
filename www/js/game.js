@@ -147,7 +147,7 @@ $.reset = function() {
 	};	
 
 	$.mouse.down = 0;
-
+	$.mouse.up =1;
 	$.level = {
 		current: 0,
 		kills: 0,
@@ -695,11 +695,12 @@ $.mousescreen = function() {
 $.mousedowncb = function( e ) {
 	e.preventDefault();
 	$.mouse.down = 1;
+	$.mouse.up=0;
 };
 
 $.mouseupcb = function( e ) {
 	e.preventDefault();
-	$.mouse.down = 0;
+	$.mouse.up = 1;
 };
 
 $.keydowncb = function( e ) {

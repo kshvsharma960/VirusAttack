@@ -54,6 +54,9 @@ $.Button.prototype.update = function( i ) {
 	if( this.hovering && $.mouse.down ) {
 		$.audio.play( 'click' );
 		this.action();
+		if($.mouse.up){
+			$.mouse.down=0;
+		}
 	}
 };
 
