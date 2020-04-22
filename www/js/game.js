@@ -340,62 +340,7 @@ $.renderInterface = function() {
 
 		/*==============================================================================
 		Instructions
-		==============================================================================*/
-		if( $.instructionTick < $.instructionTickMax ){
-			$.instructionTick += $.dt;
-			$.ctxmg.beginPath();
-			$.text( {
-				ctx: $.ctxmg,
-				x: $.cw / 2 - 10,
-				y: $.ch - 20,
-				text: 'MOVE\nAIM/FIRE\nAUTOFIRE\nPAUSE\nMUTE',
-				hspacing: 1,
-				vspacing: 17,
-				halign: 'right',
-				valign: 'bottom',
-				scale: 2,
-				snap: 1,
-				render: 1
-			} );
-			if( $.instructionTick < $.instructionTickMax * 0.25 ) {
-				var alpha = ( $.instructionTick / ( $.instructionTickMax * 0.25 ) ) * 0.5;
-			} else if( $.instructionTick > $.instructionTickMax - $.instructionTickMax * 0.25 ) {
-				var alpha = ( ( $.instructionTickMax - $.instructionTick ) / ( $.instructionTickMax * 0.25 ) ) * 0.5;
-			} else {
-				var alpha = 0.5;
-			}
-			alpha = Math.min( 1, Math.max( 0, alpha ) );
-			
-			$.ctxmg.fillStyle = 'hsla(0, 0%, 100%, ' + alpha + ')';
-			$.ctxmg.fill();
-
-			$.ctxmg.beginPath();
-			$.text( {
-				ctx: $.ctxmg,
-				x: $.cw / 2 + 10,
-				y: $.ch - 20,
-				text: 'WASD/ARROWS\nMOUSE\nF\nP\nM',
-				hspacing: 1,
-				vspacing: 17,
-				halign: 'left',
-				valign: 'bottom',
-				scale: 2,
-				snap: 1,
-				render: 1
-			} );
-			if( $.instructionTick < $.instructionTickMax * 0.25 ) {
-				var alpha = ( $.instructionTick / ( $.instructionTickMax * 0.25 ) ) * 1;
-			} else if( $.instructionTick > $.instructionTickMax - $.instructionTickMax * 0.25 ) {
-				var alpha = ( ( $.instructionTickMax - $.instructionTick ) / ( $.instructionTickMax * 0.25 ) ) * 1;
-			} else {
-				var alpha = 1;
-			}
-			alpha = Math.min( 1, Math.max( 0, alpha ) );
-			
-			$.ctxmg.fillStyle = 'hsla(0, 0%, 100%, ' + alpha + ')';
-			$.ctxmg.fill();
-		}
-
+		
 		/*==============================================================================
 		Slow Enemies Screen Cover
 		==============================================================================*/
@@ -685,6 +630,28 @@ $.mousemovecb = function( e ) {
 	$.mousescreen();
 };
 
+$.touchmovecb = function(e){
+	$.mouse.ax = e.targetTouches[0].pageX;
+	$.mouse.ay = e.targetTouches[0].pageY;
+	$.mousescreen();
+}
+
+
+$.touchstartcb = function(e){
+	//e.preventDefault();
+	$.mouse.down = 1;
+	$.mouse.up=0;
+	$.mouse.ax = e.targetTouches[0].pageX;
+	$.mouse.ay = e.targetTouches[0].pageY;
+	$.mousescreen();
+}
+
+$.touchendcb = function( e ) {
+	//e.preventDefault();
+	$.mouse.up = 1;
+	$.mouse.down = 0;
+};
+
 $.mousescreen = function() {
 	$.mouse.sx = $.mouse.ax - $.cOffset.left;
 	$.mouse.sy = $.mouse.ay - $.cOffset.top;
@@ -740,9 +707,12 @@ $.blurcb = function() {
 }
 
 $.bindEvents = function() {
-	window.addEventListener( 'mousemove', $.mousemovecb );
-	window.addEventListener( 'mousedown', $.mousedowncb );
-	window.addEventListener( 'mouseup', $.mouseupcb );
+	window.addEventListener( 'touchmove', $.touchmovecb,false );
+	//window.addEventListener( 'touchmove', $.touchmovecb );
+	//window.addEventListener( 'mousedown', $.mousedowncb );
+	//window.addEventListener( 'mouseup', $.mouseupcb );
+	window.addEventListener( 'touchstart', $.touchstartcb, false );
+	window.addEventListener( 'touchend', $.touchendcb ,false);
 	window.addEventListener( 'keydown', $.keydowncb );
 	window.addEventListener( 'keyup', $.keyupcb );
 	window.addEventListener( 'resize', $.resizecb );
