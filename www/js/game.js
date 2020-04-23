@@ -650,6 +650,10 @@ $.touchendcb = function( e ) {
 	//e.preventDefault();
 	$.mouse.up = 1;
 	$.mouse.down = 0;
+	$.keys.state.up = 0;
+	$.keys.state.down = 0;
+	$.keys.state.right = 0;
+	$.keys.state.left = 0;
 };
 
 $.mousescreen = function() {
@@ -669,6 +673,57 @@ $.mouseupcb = function( e ) {
 	e.preventDefault();
 	$.mouse.up = 1;
 };
+
+/*
+window.on('swipeleft',  function(){ $.keys.state.left = 1;  })
+              .on('swiperight', function(){  $.keys.state.right = 1; })
+              .on('swipeup',    function(){ $.keys.state.up = 1; })
+			  .on('swipedown',  function(){  $.keys.state.down = 1;  });
+		  
+
+var joystick = new VirtualJoystick({
+	mouseSupport	: true,
+	limitStickTravel: true,
+	stickRadius	: 50
+});
+*/
+
+// one on the right of the screen
+var joystick_left	= new VirtualJoystick({
+	container	: document.body,
+	strokeStyle	: 'orange',
+	limitStickTravel: true,
+	stickRadius	: 50
+});
+joystick_left.addEventListener('touchStartValidation', function(event){
+	var touch	= event.changedTouches[0];
+	if( touch.pageX > window.innerWidth/2 ){
+		return false;
+	}
+	return true;
+});
+joystick_left.addEventListener('touchStart', function(e){
+	$.mouse.down=0;
+})
+
+var joystick_right	= new VirtualJoystick({
+	container	: document.body,
+	strokeStyle	: 'cyan',
+	limitStickTravel: true,
+	stickRadius	: 50		
+});
+joystick_right.addEventListener('touchStartValidation', function(event){
+	var touch	= event.changedTouches[0];
+	if( touch.pageX <= window.innerWidth/2 )
+	{
+		return false;
+	}
+	return true;
+});
+
+
+
+
 
 $.keydowncb = function( e ) {
 	var e = ( e.keyCode ? e.keyCode : e.which );
@@ -708,9 +763,6 @@ $.blurcb = function() {
 
 $.bindEvents = function() {
 	window.addEventListener( 'touchmove', $.touchmovecb,false );
-	//window.addEventListener( 'touchmove', $.touchmovecb );
-	//window.addEventListener( 'mousedown', $.mousedowncb );
-	//window.addEventListener( 'mouseup', $.mouseupcb );
 	window.addEventListener( 'touchstart', $.touchstartcb, false );
 	window.addEventListener( 'touchend', $.touchendcb ,false);
 	window.addEventListener( 'keydown', $.keydowncb );
@@ -821,7 +873,29 @@ $.updateScreen = function() {
 		- $.rumble.y + 'px';
 
 	$.mousescreen();
+	Joystick_leftAction();
 };
+
+function Joystick_leftAction(){
+	if( joystick_left.right() ){
+		$.keys.state.right =true;
+		$.keys.state.left =false;
+		}
+		if( joystick_left.left() ){
+			$.keys.state.left =true;
+			$.keys.state.right =false;
+		}
+		if( joystick_left.up() ){
+			$.keys.state.up =true;
+			$.keys.state.down =false;
+		}
+		if( joystick_left.down() ){
+			$.keys.state.down =true;
+			$.keys.state.up =false;
+		}
+
+}
+
 
 $.updateLevel = function() {
 	if( $.level.kills >= $.level.killsToLevel ) {
@@ -1319,7 +1393,7 @@ $.setupStates = function() {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
 			y: 50,
-			text: 'GAME OVER',
+			text: 'INFECTED',
 			hspacing: 3,
 			vspacing: 1,
 			halign: 'center',
