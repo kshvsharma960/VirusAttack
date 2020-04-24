@@ -631,19 +631,28 @@ $.mousemovecb = function( e ) {
 };
 
 $.touchmovecb = function(e){
+	if($.state !='play'){
 	$.mouse.ax = e.targetTouches[0].pageX;
 	$.mouse.ay = e.targetTouches[0].pageY;
 	$.mousescreen();
+	}
+	else{
+		$.mouse.ax=window.innerWidth/2;
+		$.mouse.ay=window.innerHeight/2;
+		Joystick_rightAction();
+	}
 }
 
 
 $.touchstartcb = function(e){
 	//e.preventDefault();
+	if($.state!='play'){
 	$.mouse.down = 1;
 	$.mouse.up=0;
 	$.mouse.ax = e.targetTouches[0].pageX;
 	$.mouse.ay = e.targetTouches[0].pageY;
 	$.mousescreen();
+	}
 }
 
 $.touchendcb = function( e ) {
@@ -699,12 +708,9 @@ joystick_left.addEventListener('touchStartValidation', function(event){
 	var touch	= event.changedTouches[0];
 	if( touch.pageX > window.innerWidth/2 ){
 		return false;
-	}
+	}	
 	return true;
 });
-joystick_left.addEventListener('touchStart', function(e){
-	$.mouse.down=0;
-})
 
 var joystick_right	= new VirtualJoystick({
 	container	: document.body,
@@ -875,6 +881,17 @@ $.updateScreen = function() {
 	$.mousescreen();
 	Joystick_leftAction();
 };
+
+function Joystick_rightAction(){
+	if(joystick_right._pressed){
+	$.mouse.ax += joystick_right.deltaX() * 10;
+	$.mouse.ay += joystick_right.deltaY()*10;
+	
+	$.mousescreen();
+	$.mouse.down=1;
+	}
+
+}
 
 function Joystick_leftAction(){
 	if( joystick_left.right() ){
