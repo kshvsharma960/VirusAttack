@@ -310,7 +310,7 @@ $.renderInterface = function() {
 			var powerupText = $.text( {
 				ctx: $.ctxmg,
 				x: $.minimap.x + $.minimap.width + 90,
-				y: $.minimap.y + 4 + ( i * 12 ),
+				y: $.minimap.y + ( i * 12 ),
 				text: powerup.title,
 				hspacing: 1,
 				vspacing: 1,
@@ -657,8 +657,10 @@ $.touchstartcb = function(e){
 
 $.touchendcb = function( e ) {
 	//e.preventDefault();
+	if(!joystick_right._pressed){
 	$.mouse.up = 1;
 	$.mouse.down = 0;
+	}
 	$.keys.state.up = 0;
 	$.keys.state.down = 0;
 	$.keys.state.right = 0;
@@ -941,7 +943,7 @@ $.updatePowerupTimers = function() {
 	// HEALTH
 	if( $.powerupTimers[ 0 ] > 0 ){
 		if( $.hero.life < 1 ) {
-			$.hero.life += 0.001;
+			$.hero.life += 0.005;
 		}
 		if( $.hero.life > 1 ) {
 			$.hero.life = 1;
@@ -952,7 +954,7 @@ $.updatePowerupTimers = function() {
 	// SLOW ENEMIES
 	if( $.powerupTimers[ 1 ] > 0 ){
 		$.slow = 1;
-		$.powerupTimers[ 1 ] -= $.dt;
+		$.powerupTimers[ 1 ] -= $.dt/2;
 	} else {
 		$.slow = 0;
 	}
@@ -961,7 +963,7 @@ $.updatePowerupTimers = function() {
 	if( $.powerupTimers[ 2 ] > 0 ){
 		$.hero.weapon.fireRate = 2;
 		$.hero.weapon.bullet.speed = 14;
-		$.powerupTimers[ 2 ] -= $.dt;
+		$.powerupTimers[ 2 ] -= $.dt/($.level.current);
 	} else {
 		$.hero.weapon.fireRate = 5;
 		$.hero.weapon.bullet.speed = 10;
@@ -970,7 +972,7 @@ $.updatePowerupTimers = function() {
 	// TRIPLE SHOT
 	if( $.powerupTimers[ 3 ] > 0 ){
 		$.hero.weapon.count = 3;
-		$.powerupTimers[ 3 ] -= $.dt;
+		$.powerupTimers[ 3 ] -= $.dt/($.level.current * 2);
 	} else {
 		$.hero.weapon.count = 1;
 	}
@@ -978,7 +980,7 @@ $.updatePowerupTimers = function() {
 	// PIERCE SHOT
 	if( $.powerupTimers[ 4 ] > 0 ){
 		$.hero.weapon.bullet.piercing = 1;
-		$.powerupTimers[ 4 ] -= $.dt;
+		$.powerupTimers[ 4 ] -= $.dt/($.level.current * 1.5);
 	} else {
 		$.hero.weapon.bullet.piercing = 0;
 	}
