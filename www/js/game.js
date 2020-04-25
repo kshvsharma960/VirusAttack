@@ -18,7 +18,7 @@ $.init = function() {
 	$.ctxmg = $.cmg.getContext( '2d' );
 	$.ctxfg = $.cfg.getContext( '2d' );
 	$.cw = $.cmg.width = $.cfg.width = window.innerWidth;
-	$.ch = $.cmg.height = $.cfg.height = window.innerHeight-25;
+	$.ch = $.cmg.height = $.cfg.height = window.innerHeight;
 	$.wrap.style.width = $.wrapInner.style.width = $.cw + 'px';
 	$.wrap.style.height = $.wrapInner.style.height = $.ch + 'px';
 	$.wrap.style.marginLeft = ( -$.cw / 2 ) - 10 + 'px';
