@@ -34,7 +34,7 @@ var app = {
       },1000);
       document.addEventListener('backbutton',function(e){
           e.preventDefault();
-          if(exitApp){
+          
               if($.state == "menu"){
               if(confirm("Quit?")){
               clearInterval(intval)
@@ -42,7 +42,7 @@ var app = {
               }
             }
             
-          }
+          
           else{
             if($.state=='play'){
                 $.setState('pause');
@@ -50,10 +50,6 @@ var app = {
             
             else if($.state=='pause'){
                 $.setState('play');
-            }
-            else{
-              exitApp=true;
-              history.back(1);
             }
           }
       },false);
