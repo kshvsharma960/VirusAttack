@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 var app = {
     // Application Constructor
     initialize: function() {
-        
+        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
 
     // deviceready Event Handler
@@ -27,12 +28,40 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-      //  this.receivedEvent('deviceready');
+        this.receivedEvent('deviceready');
+        var exitApp = false,intval = setInterval(function(){
+          exitApp=false;
+      },1000);
+      document.addEventListener('backbutton',function(e){
+          e.preventDefault();
+          if(exitApp){
+              if($.state == "menu"){
+              if(confirm("Quit?")){
+              clearInterval(intval)
+              (navigator.app && navigator.app.exitApp())|| (device && device.exitApp())
+              }
+            }
+            
+          }
+          else{
+            if($.state=='play'){
+                $.setState('pause');
+            }
+            
+            else if($.state=='pause'){
+                $.setState('play');
+            }
+            else{
+              exitApp=true;
+              history.back(1);
+            }
+          }
+      },false);
     },
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        
+        console.log("event received : "+id);
     }
 };
 

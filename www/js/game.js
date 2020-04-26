@@ -763,9 +763,15 @@ $.resizecb = function( e ) {
 	}
 }
 
-$.blurcb = function() {
+$.blurcb = function(e) {
+	e.preventDefault();
 	if( $.state == 'play' ){
 		$.setState( 'pause' );
+	}
+	else if($.state=='menu'){
+		if(confirm("Quit??")){
+			navigator.app.exitApp();
+		}
 	}
 }
 
@@ -776,7 +782,7 @@ $.bindEvents = function() {
 	window.addEventListener( 'keydown', $.keydowncb );
 	window.addEventListener( 'keyup', $.keyupcb );
 	window.addEventListener( 'resize', $.resizecb );
-	window.addEventListener( 'blur', $.blurcb );
+	//window.addEventListener( 'backbutton', $.blurcb,false );
 };
 
 /*==============================================================================
