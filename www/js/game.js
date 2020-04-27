@@ -1195,8 +1195,25 @@ $.setupStates = function() {
 		var bottomInfo = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: $.ch - 50,
+			y: $.ch - 60,
 			text: 'LETS FIGHT THE VIRUS TOGETHER',
+			hspacing: 1,
+			vspacing: 1,
+			halign: 'center',
+			valign: 'bottom',
+			scale: 1,
+			snap: 1,
+			render: 1
+		} );
+		$.ctxmg.fillStyle = '#666';
+		$.ctxmg.fill();
+
+		$.ctxmg.beginPath();
+		var bottomInfo = $.text( {
+			ctx: $.ctxmg,
+			x: $.cw / 2,
+			y: $.ch - 40,
+			text: 'WELCOME FIGHTER    GREETINGS FRM KSHV',
 			hspacing: 1,
 			vspacing: 1,
 			halign: 'center',
