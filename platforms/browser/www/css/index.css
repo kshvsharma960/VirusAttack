@@ -34,6 +34,7 @@
 
 body {
     background: #080808;
+    position: fixed!important;
 }
 
 #wrap {
@@ -42,7 +43,7 @@ body {
     left: 50%;
     opacity: 0;
     padding: 10px;		
-    position: absolute;
+    position: fixed;
     top: 50%;
     transition: opacity 1.5s;
 }

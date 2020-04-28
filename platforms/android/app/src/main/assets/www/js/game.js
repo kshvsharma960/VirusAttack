@@ -18,7 +18,7 @@ $.init = function() {
 	$.ctxmg = $.cmg.getContext( '2d' );
 	$.ctxfg = $.cfg.getContext( '2d' );
 	$.cw = $.cmg.width = $.cfg.width = window.innerWidth;
-	$.ch = $.cmg.height = $.cfg.height = window.innerHeight-25;
+	$.ch = $.cmg.height = $.cfg.height = window.innerHeight;
 	$.wrap.style.width = $.wrapInner.style.width = $.cw + 'px';
 	$.wrap.style.height = $.wrapInner.style.height = $.ch + 'px';
 	$.wrap.style.marginLeft = ( -$.cw / 2 ) - 10 + 'px';
@@ -147,7 +147,7 @@ $.reset = function() {
 	};	
 
 	$.mouse.down = 0;
-
+	$.mouse.up =1;
 	$.level = {
 		current: 0,
 		kills: 0,
@@ -310,7 +310,7 @@ $.renderInterface = function() {
 			var powerupText = $.text( {
 				ctx: $.ctxmg,
 				x: $.minimap.x + $.minimap.width + 90,
-				y: $.minimap.y + 4 + ( i * 12 ),
+				y: $.minimap.y + ( i * 12 ),
 				text: powerup.title,
 				hspacing: 1,
 				vspacing: 1,
@@ -340,62 +340,7 @@ $.renderInterface = function() {
 
 		/*==============================================================================
 		Instructions
-		==============================================================================*/
-		if( $.instructionTick < $.instructionTickMax ){
-			$.instructionTick += $.dt;
-			$.ctxmg.beginPath();
-			$.text( {
-				ctx: $.ctxmg,
-				x: $.cw / 2 - 10,
-				y: $.ch - 20,
-				text: 'MOVE\nAIM/FIRE\nAUTOFIRE\nPAUSE\nMUTE',
-				hspacing: 1,
-				vspacing: 17,
-				halign: 'right',
-				valign: 'bottom',
-				scale: 2,
-				snap: 1,
-				render: 1
-			} );
-			if( $.instructionTick < $.instructionTickMax * 0.25 ) {
-				var alpha = ( $.instructionTick / ( $.instructionTickMax * 0.25 ) ) * 0.5;
-			} else if( $.instructionTick > $.instructionTickMax - $.instructionTickMax * 0.25 ) {
-				var alpha = ( ( $.instructionTickMax - $.instructionTick ) / ( $.instructionTickMax * 0.25 ) ) * 0.5;
-			} else {
-				var alpha = 0.5;
-			}
-			alpha = Math.min( 1, Math.max( 0, alpha ) );
-			
-			$.ctxmg.fillStyle = 'hsla(0, 0%, 100%, ' + alpha + ')';
-			$.ctxmg.fill();
-
-			$.ctxmg.beginPath();
-			$.text( {
-				ctx: $.ctxmg,
-				x: $.cw / 2 + 10,
-				y: $.ch - 20,
-				text: 'WASD/ARROWS\nMOUSE\nF\nP\nM',
-				hspacing: 1,
-				vspacing: 17,
-				halign: 'left',
-				valign: 'bottom',
-				scale: 2,
-				snap: 1,
-				render: 1
-			} );
-			if( $.instructionTick < $.instructionTickMax * 0.25 ) {
-				var alpha = ( $.instructionTick / ( $.instructionTickMax * 0.25 ) ) * 1;
-			} else if( $.instructionTick > $.instructionTickMax - $.instructionTickMax * 0.25 ) {
-				var alpha = ( ( $.instructionTickMax - $.instructionTick ) / ( $.instructionTickMax * 0.25 ) ) * 1;
-			} else {
-				var alpha = 1;
-			}
-			alpha = Math.min( 1, Math.max( 0, alpha ) );
-			
-			$.ctxmg.fillStyle = 'hsla(0, 0%, 100%, ' + alpha + ')';
-			$.ctxmg.fill();
-		}
-
+		
 		/*==============================================================================
 		Slow Enemies Screen Cover
 		==============================================================================*/
@@ -685,6 +630,43 @@ $.mousemovecb = function( e ) {
 	$.mousescreen();
 };
 
+$.touchmovecb = function(e){
+	if($.state !='play'){
+	$.mouse.ax = e.targetTouches[0].pageX;
+	$.mouse.ay = e.targetTouches[0].pageY;
+	$.mousescreen();
+	}
+	else{
+		$.mouse.ax=window.innerWidth/2;
+		$.mouse.ay=window.innerHeight/2;
+		Joystick_rightAction();
+	}
+}
+
+
+$.touchstartcb = function(e){
+	//e.preventDefault();
+	if($.state!='play'){
+	$.mouse.down = 1;
+	$.mouse.up=0;
+	$.mouse.ax = e.targetTouches[0].pageX;
+	$.mouse.ay = e.targetTouches[0].pageY;
+	$.mousescreen();
+	}
+}
+
+$.touchendcb = function( e ) {
+	//e.preventDefault();
+	if(!joystick_right._pressed){
+	$.mouse.up = 1;
+	$.mouse.down = 0;
+	}
+	$.keys.state.up = 0;
+	$.keys.state.down = 0;
+	$.keys.state.right = 0;
+	$.keys.state.left = 0;
+};
+
 $.mousescreen = function() {
 	$.mouse.sx = $.mouse.ax - $.cOffset.left;
 	$.mouse.sy = $.mouse.ay - $.cOffset.top;
@@ -695,12 +677,61 @@ $.mousescreen = function() {
 $.mousedowncb = function( e ) {
 	e.preventDefault();
 	$.mouse.down = 1;
+	$.mouse.up=0;
 };
 
 $.mouseupcb = function( e ) {
 	e.preventDefault();
-	$.mouse.down = 0;
+	$.mouse.up = 1;
 };
+
+/*
+window.on('swipeleft',  function(){ $.keys.state.left = 1;  })
+              .on('swiperight', function(){  $.keys.state.right = 1; })
+              .on('swipeup',    function(){ $.keys.state.up = 1; })
+			  .on('swipedown',  function(){  $.keys.state.down = 1;  });
+		  
+
+var joystick = new VirtualJoystick({
+	mouseSupport	: true,
+	limitStickTravel: true,
+	stickRadius	: 50
+});
+*/
+
+// one on the right of the screen
+var joystick_left	= new VirtualJoystick({
+	container	: document.body,
+	strokeStyle	: 'orange',
+	limitStickTravel: true,
+	stickRadius	: 50
+});
+joystick_left.addEventListener('touchStartValidation', function(event){
+	var touch	= event.changedTouches[0];
+	if( touch.pageX > window.innerWidth/2 ){
+		return false;
+	}	
+	return true;
+});
+
+var joystick_right	= new VirtualJoystick({
+	container	: document.body,
+	strokeStyle	: 'cyan',
+	limitStickTravel: true,
+	stickRadius	: 50		
+});
+joystick_right.addEventListener('touchStartValidation', function(event){
+	var touch	= event.changedTouches[0];
+	if( touch.pageX <= window.innerWidth/2 )
+	{
+		return false;
+	}
+	return true;
+});
+
+
+
+
 
 $.keydowncb = function( e ) {
 	var e = ( e.keyCode ? e.keyCode : e.which );
@@ -732,20 +763,26 @@ $.resizecb = function( e ) {
 	}
 }
 
-$.blurcb = function() {
+$.blurcb = function(e) {
+	e.preventDefault();
 	if( $.state == 'play' ){
 		$.setState( 'pause' );
+	}
+	else if($.state=='menu'){
+		if(confirm("Quit??")){
+			navigator.app.exitApp();
+		}
 	}
 }
 
 $.bindEvents = function() {
-	window.addEventListener( 'mousemove', $.mousemovecb );
-	window.addEventListener( 'mousedown', $.mousedowncb );
-	window.addEventListener( 'mouseup', $.mouseupcb );
+	window.addEventListener( 'touchmove', $.touchmovecb,false );
+	window.addEventListener( 'touchstart', $.touchstartcb, false );
+	window.addEventListener( 'touchend', $.touchendcb ,false);
 	window.addEventListener( 'keydown', $.keydowncb );
 	window.addEventListener( 'keyup', $.keyupcb );
 	window.addEventListener( 'resize', $.resizecb );
-	window.addEventListener( 'blur', $.blurcb );
+	//window.addEventListener( 'backbutton', $.blurcb,false );
 };
 
 /*==============================================================================
@@ -850,7 +887,40 @@ $.updateScreen = function() {
 		- $.rumble.y + 'px';
 
 	$.mousescreen();
+	Joystick_leftAction();
 };
+
+function Joystick_rightAction(){
+	if(joystick_right._pressed){
+	$.mouse.ax += joystick_right.deltaX() * 10;
+	$.mouse.ay += joystick_right.deltaY()*10;
+	
+	$.mousescreen();
+	$.mouse.down=1;
+	}
+
+}
+
+function Joystick_leftAction(){
+	if( joystick_left.right() ){
+		$.keys.state.right =true;
+		$.keys.state.left =false;
+		}
+		if( joystick_left.left() ){
+			$.keys.state.left =true;
+			$.keys.state.right =false;
+		}
+		if( joystick_left.up() ){
+			$.keys.state.up =true;
+			$.keys.state.down =false;
+		}
+		if( joystick_left.down() ){
+			$.keys.state.down =true;
+			$.keys.state.up =false;
+		}
+
+}
+
 
 $.updateLevel = function() {
 	if( $.level.kills >= $.level.killsToLevel ) {
@@ -879,7 +949,7 @@ $.updatePowerupTimers = function() {
 	// HEALTH
 	if( $.powerupTimers[ 0 ] > 0 ){
 		if( $.hero.life < 1 ) {
-			$.hero.life += 0.001;
+			$.hero.life += 0.005;
 		}
 		if( $.hero.life > 1 ) {
 			$.hero.life = 1;
@@ -890,7 +960,7 @@ $.updatePowerupTimers = function() {
 	// SLOW ENEMIES
 	if( $.powerupTimers[ 1 ] > 0 ){
 		$.slow = 1;
-		$.powerupTimers[ 1 ] -= $.dt;
+		$.powerupTimers[ 1 ] -= $.dt/2;
 	} else {
 		$.slow = 0;
 	}
@@ -899,7 +969,7 @@ $.updatePowerupTimers = function() {
 	if( $.powerupTimers[ 2 ] > 0 ){
 		$.hero.weapon.fireRate = 2;
 		$.hero.weapon.bullet.speed = 14;
-		$.powerupTimers[ 2 ] -= $.dt;
+		$.powerupTimers[ 2 ] -= $.dt/($.level.current);
 	} else {
 		$.hero.weapon.fireRate = 5;
 		$.hero.weapon.bullet.speed = 10;
@@ -908,7 +978,7 @@ $.updatePowerupTimers = function() {
 	// TRIPLE SHOT
 	if( $.powerupTimers[ 3 ] > 0 ){
 		$.hero.weapon.count = 3;
-		$.powerupTimers[ 3 ] -= $.dt;
+		$.powerupTimers[ 3 ] -= $.dt/($.level.current * 2);
 	} else {
 		$.hero.weapon.count = 1;
 	}
@@ -916,7 +986,7 @@ $.updatePowerupTimers = function() {
 	// PIERCE SHOT
 	if( $.powerupTimers[ 4 ] > 0 ){
 		$.hero.weapon.bullet.piercing = 1;
-		$.powerupTimers[ 4 ] -= $.dt;
+		$.powerupTimers[ 4 ] -= $.dt/($.level.current * 1.5);
 	} else {
 		$.hero.weapon.bullet.piercing = 0;
 	}
@@ -1125,8 +1195,25 @@ $.setupStates = function() {
 		var bottomInfo = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: $.ch - 50,
+			y: $.ch - 60,
 			text: 'LETS FIGHT THE VIRUS TOGETHER',
+			hspacing: 1,
+			vspacing: 1,
+			halign: 'center',
+			valign: 'bottom',
+			scale: 1,
+			snap: 1,
+			render: 1
+		} );
+		$.ctxmg.fillStyle = '#666';
+		$.ctxmg.fill();
+
+		$.ctxmg.beginPath();
+		var bottomInfo = $.text( {
+			ctx: $.ctxmg,
+			x: $.cw / 2,
+			y: $.ch - 40,
+			text: 'WELCOME FIGHTER    GREETINGS FRM KSHV',
 			hspacing: 1,
 			vspacing: 1,
 			halign: 'center',
@@ -1348,7 +1435,7 @@ $.setupStates = function() {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
 			y: 50,
-			text: 'GAME OVER',
+			text: 'INFECTED',
 			hspacing: 3,
 			vspacing: 1,
 			halign: 'center',

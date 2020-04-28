@@ -499,31 +499,31 @@ Powerups
 ==============================================================================*/
 $.definitions.powerups = [
 	{
-		title: 'HEALTH PACK',
+		title: 'ANTIVIRAL DRUG',
 		hue: 0,
 		saturation: 0,
 		lightness: 100
 	},
 	{
-		title: 'SLOW ENEMIES',
+		title: 'SLOWDOWN VIRUSES',
 		hue: 200,
 		saturation: 0,
 		lightness: 100
 	},
 	{
-		title: 'FAST SHOT',
+		title: 'FAST INJECT',
 		hue: 100,
 		saturation: 100,
 		lightness: 60
 	},
 	{
-		title: 'TRIPLE SHOT',
+		title: 'TRIPLE INJECT',
 		hue: 200,
 		saturation: 100,
 		lightness: 60
 	},
 	{
-		title: 'PIERCE SHOT',
+		title: 'PIERCE INJECT',
 		hue: 0,
 		saturation: 100,
 		lightness: 60
