@@ -77,7 +77,7 @@ $.init = function() {
 
 	$.minimap = {		
 		x: 20,
-		y: $.ch - Math.floor( $.ch * 0.1 ) - 20,
+		y: $.ch - Math.floor( $.ch * 0.1 ) - 30,
 		width: Math.floor( $.cw * 0.1 ),
 		height: Math.floor( $.ch * 0.1 ),
 		scale: Math.floor( $.cw * 0.1 ) / $.ww,
@@ -1175,7 +1175,7 @@ $.setupStates = function() {
 		var title = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: $.ch / 2 - 100,
+			y: $.ch / 2 - 90,
 			text: 'VIRUS ATTACK',
 			hspacing: 2,
 			vspacing: 1,
@@ -1234,7 +1234,7 @@ $.setupStates = function() {
 		var statsTitle = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: 50,
+			y: 100,
 			text: 'STATS',
 			hspacing: 3,
 			vspacing: 1,
@@ -1434,7 +1434,7 @@ $.setupStates = function() {
 		var gameoverTitle = $.text( {
 			ctx: $.ctxmg,
 			x: $.cw / 2,
-			y: 50,
+			y: 100,
 			text: 'INFECTED',
 			hspacing: 3,
 			vspacing: 1,

@@ -17,7 +17,28 @@
  * under the License.
  */
 
-var app = {
+ function InitializeAdmob(){
+       /* admob.banner.config({
+            id: 'ca-app-pub-8614117558939586/6474700129',//'ca-app-pub-8614117558939586~1489487828',
+           });
+*/
+           // Create banner
+           admob.banner.prepare();
+
+           // Show the banner
+           admob.banner.show({
+               id: 'ca-app-pub-8614117558939586/6474700129',
+               autoShow:true
+           });
+   
+           // Hide the banner
+           //admob.banner.hide()
+   
+           // Remove the banner
+           //admob.banner.remove()
+ }
+
+ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -53,6 +74,7 @@ var app = {
             }
           }
       },false);
+      InitializeAdmob();
     },
 
     // Update DOM on a Received Event
