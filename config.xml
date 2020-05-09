@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.game.virusattack" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Virus Attack</name>
+<widget id="io.game.spacevoyager" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Space Voyager</name>
     <description>
-        A 2-D Arcade game where Player is bound to fight the Viruses flowing randomly in order to infect the Player.
+        A 2-D Arcade game where Player is bound to fight the Alien targeting Hero.
     </description>
     <preference name="orientation" value="landscape" />
     <preference name="Fullscreen" value="true" />

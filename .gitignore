@@ -1,0 +1,4 @@
+signingKey.txt
+app-release-unsigned.apk
+app-release.apk
+android.keystore
